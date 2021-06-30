@@ -1,39 +1,75 @@
+import Konva from "konva";
 import Victor from "victor";
 
 function degtorad(deg) {
   return (Math.PI / 180.0) * deg;
 }
 
-export class Poller extends createjs.Shape {
+function setPos(x, y) {
+  this.x(x);
+  this.y(y);
+}
+
+export class Poller extends Konva.Circle {
   constructor(posx, posy) {
-    super();
+    super({
+      x: posx,
+      y: posy,
+      radius: 0.6,
+      fill: "#f00"
+    });
+    this.setPos = setPos;
 
-    let g = new createjs.Graphics();
-    g.beginFill("#f00").drawCircle(posx, posy, 0.5);
-    this.graphics = g;
-
-    this.on("mouseover", (event) => {
-      let g = new createjs.Graphics();
-      g.beginFill("#f00").drawCircle(posx, posy, 0.5);
-      g.beginStroke("#000").setStrokeStyle(0.3).drawCircle(posx, posy, 0.8);
-      this.graphics = g;
+    this.on("mouseenter", (event) => {
+      this.setAttrs({ radius: 0.8, stroke: "#000", strokeWidth: 0.3 });
     });
 
-    this.on("mouseout", (event) => {
-      let g = new createjs.Graphics();
-      g.beginFill("#f00").drawCircle(posx, posy, 0.5);
-      this.graphics = g;
+    this.on("mouseleave", (event) => {
+      this.setAttrs({ radius: 0.6, stroke: undefined, strokeWidth: undefined });
     });
   }
 }
 
-export default class Boat extends createjs.Container {
+export default class Boat extends Konva.Group {
   constructor(posx, posy) {
-    super();
+    super({
+      x: posx,
+      y: posy
+    });
+    this.setPos = setPos;
     this.heading = 0.0; // positive y-axis (down on screen)
     this.rudder = 0;
     this.speed = 0;
 
+    this.hull = new Konva.Line({
+      points: [
+        0.0,
+        11.0,
+        1.3,
+        8.0,
+        1.8,
+        6.0,
+        1.9,
+        4.0,
+        1.5,
+        0.0,
+        -1.5,
+        0.0,
+        -1.9,
+        4.0,
+        -1.8,
+        6.0,
+        -1.3,
+        8.0
+      ],
+      stroke: "#444",
+      strokeWidth: 0.3,
+      closed: true
+    });
+
+    this.add(this.hull);
+
+    /*
     let g = new createjs.Graphics();
     g.beginStroke("#444")
       .setStrokeStyle(0.3)
@@ -59,13 +95,14 @@ export default class Boat extends createjs.Container {
     this.hull = new createjs.Shape(g);
     this.addChild(this.hull);
     [this.x, this.y] = [posx, posy];
+    */
 
     this.klampebug = new Poller(0, 11.0);
-    this.addChild(this.klampebug);
+    this.add(this.klampebug);
     this.klampeheckbb = new Poller(1.3, 0.0);
-    this.addChild(this.klampeheckbb);
+    this.add(this.klampeheckbb);
     this.klampehecksb = new Poller(-1.3, 0.0);
-    this.addChild(this.klampehecksb);
+    this.add(this.klampehecksb);
   }
 
   rudderLeft() {
@@ -90,30 +127,8 @@ export default class Boat extends createjs.Container {
     let dir = Victor(0.0, 1.0);
     dir.rotateDeg(this.heading + 180.0);
     let d = this.speed * (timedelta / 1000.0);
-    //this.pos.add();
+
     dir.multiply(Victor(d, d));
-    [this.x, this.y] = [this.x + dir.x, this.y + dir.y];
-  }
-
-  draw2(ctx) {
-    ctx.save();
-    ctx.translate(this.pos.x, this.pos.y);
-    ctx.rotate(degtorad(this.heading + 180.0));
-    ctx.scale(4.0, 4.0);
-
-    ctx.beginPath();
-    ctx.moveTo(0.0, 11.0);
-    ctx.lineTo(1.5, 9.5);
-    ctx.lineTo(1.9, 6.0);
-    ctx.lineTo(2.0, 4.0);
-    ctx.lineTo(1.6, 0);
-    ctx.lineTo(-1.6, 0.0);
-    ctx.lineTo(-2.0, 4.0);
-    ctx.lineTo(-1.9, 6.0);
-    ctx.lineTo(-1.5, 9.5);
-    ctx.lineTo(0.0, 11.0);
-    ctx.stroke();
-
-    ctx.restore();
+    this.setPos(this.x() + dir.x, this.y() + dir.y);
   }
 }

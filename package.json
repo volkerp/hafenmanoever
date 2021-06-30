@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "easeljs": "1.0.2",
+    "konva": "8.1.0",
     "parcel-bundler": "^1.6.1",
     "victor": "1.1.0"
   },
