@@ -1,73 +1,53 @@
-import Konva from "konva";
-import Victor from "victor";
+import paper from "paper";
 
 function degtorad(deg) {
   return (Math.PI / 180.0) * deg;
 }
 
-function setPos(x, y) {
-  this.x(x);
-  this.y(y);
-}
-
-export class Poller extends Konva.Circle {
+export class Poller extends paper.Path.Circle {
   constructor(posx, posy) {
-    super({
-      x: posx,
-      y: posy,
-      radius: 0.6,
-      fill: "#f00"
-    });
-    this.setPos = setPos;
+    super(posx, posy, 0.8);
+    this.fillColor = "red";
 
     this.on("mouseenter", (event) => {
-      this.setAttrs({ radius: 0.8, stroke: "#000", strokeWidth: 0.3 });
+      this.radius = 1.0;
+      this.strokeColor = "black";
+      this.strokeWidth = 0.4;
     });
 
     this.on("mouseleave", (event) => {
-      this.setAttrs({ radius: 0.6, stroke: undefined, strokeWidth: undefined });
+      this.radius = 0.8;
+      this.strokeColor = undefined;
+      this.strokeWidth = undefined;
     });
   }
 }
 
-export default class Boat extends Konva.Group {
+export default class Boat extends paper.Group {
   constructor(posx, posy) {
-    super({
-      x: posx,
-      y: posy
-    });
-    this.setPos = setPos;
+    super();
     this.heading = 0.0; // positive y-axis (down on screen)
     this.rudder = 0;
     this.speed = 0;
+    this.applyMatrix = true;
 
-    this.hull = new Konva.Line({
-      points: [
-        0.0,
-        11.0,
-        1.3,
-        8.0,
-        1.8,
-        6.0,
-        1.9,
-        4.0,
-        1.5,
-        0.0,
-        -1.5,
-        0.0,
-        -1.9,
-        4.0,
-        -1.8,
-        6.0,
-        -1.3,
-        8.0
-      ],
-      stroke: "#444",
-      strokeWidth: 0.3,
-      closed: true
-    });
+    this.hull = new paper.Path();
+    this.hull.addSegments([
+      [0.0, 11.0],
+      [1.3, 8.0],
+      [1.8, 6.0],
+      [1.9, 4.0],
+      [1.5, 0.0],
+      [-1.5, 0.0],
+      [-1.9, 4.0],
+      [-1.8, 6.0],
+      [-1.3, 8.0],
+      [0.0, 11.0]
+    ]);
+    this.hull.strokeColor = "#444";
+    this.hull.strokeWidth = 1.0;
 
-    this.add(this.hull);
+    this.addChild(this.hull);
 
     /*
     let g = new createjs.Graphics();
@@ -98,19 +78,21 @@ export default class Boat extends Konva.Group {
     */
 
     this.klampebug = new Poller(0, 11.0);
-    this.add(this.klampebug);
+    this.addChild(this.klampebug);
     this.klampeheckbb = new Poller(1.3, 0.0);
-    this.add(this.klampeheckbb);
+    this.addChild(this.klampeheckbb);
     this.klampehecksb = new Poller(-1.3, 0.0);
-    this.add(this.klampehecksb);
+    this.addChild(this.klampehecksb);
+
+    this.translate(posx, posy);
   }
 
   rudderLeft() {
-    this.heading -= 10;
+    this.rotation -= 10;
   }
 
   rudderRight() {
-    this.heading += 10;
+    this.rotation += 10;
   }
 
   speedUp() {
@@ -124,11 +106,14 @@ export default class Boat extends Konva.Group {
   }
 
   update(timedelta) {
-    let dir = Victor(0.0, 1.0);
-    dir.rotateDeg(this.heading + 180.0);
-    let d = this.speed * (timedelta / 1000.0);
+    //console.log(this.hull.matrix);
+    //let dir = this.hull.globalToLocal(new paper.Point(0.0, 1.0));
+    let dir = new paper.Point(0.0, 1.0).rotate(this.rotation);
 
-    dir.multiply(Victor(d, d));
-    this.setPos(this.x() + dir.x, this.y() + dir.y);
+    let d = this.speed * (timedelta / 1000.0);
+    dir = dir.multiply(d);
+    this.position = this.position.add(dir);
+
+    //this.setPos(this.x() + dir.x, this.y() + dir.y);
   }
 }

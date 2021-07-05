@@ -1,25 +1,14 @@
-import Konva from "konva";
+import paper from "paper";
 import Boat from "/src/boat.js";
 
-import { Rect } from "./rectangle";
+// import { Rect } from "./rectangle";
 
 export default class Game {
-  constructor(stage) {
-    this.stage = stage;
-    this.layer = new Konva.Layer();
-    this.stage.add(this.layer);
-
+  constructor() {
     this.boat = new Boat(50, 70);
-    this.layer.add(this.boat);
 
-    this.pier = new Konva.Rect({
-      x: 0,
-      y: 85,
-      width: 800,
-      height: 600,
-      fill: "#999"
-    });
-    this.layer.add(this.pier);
+    this.pier = new paper.Path.Rectangle(0, 85, 800, 600);
+    this.pier.strokeColor = "black";
 
     document.onkeydown = (event) => {
       switch (event.key) {
@@ -56,13 +45,17 @@ export default class Game {
   }
 
   update(timedelta) {
+    //this.boat.position = new paper.Point(100, 0);
     this.boat.update(timedelta);
-    //this.hitcheck();
-    if (this.boat.hull.intersects({ x: 50, y: 75 })) console.log("intersects");
-    this.layer.draw();
+    if (this.pier.intersects(this.boat.hull)) {
+      this.pier.strokeColor = "red";
+    } else {
+      this.pier.strokeColor = "black";
+    }
   }
 
   hitcheck() {
+    /*
     function scan_rect_for_collision(rect, s1, s2) {
       const step = 0.5;
       for (let x = rect.x; x <= rect.x + rect.width; x += step)
@@ -86,7 +79,7 @@ export default class Game {
     if (!i.isEmpty()) {
       scan_rect_for_collision(i, this.boat.hull, this.pier);
     }
-
+*/
     /*
       .getTransformedBounds()
       .intersection(this.pier_rect);
