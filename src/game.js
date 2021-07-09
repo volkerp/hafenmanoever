@@ -4,58 +4,72 @@ import Boat from "/src/boat.js";
 // import { Rect } from "./rectangle";
 
 export default class Game {
-  constructor() {
-    this.boat = new Boat(50, 70);
+    constructor() {
+        this.boat = new Boat(50, 70);
+        this.boat.scale(4.0);
 
-    this.pier = new paper.Path.Rectangle(0, 85, 800, 600);
-    this.pier.strokeColor = "black";
+        this.pier = new paper.Path.Rectangle(0, 85, 800, 600);
+        this.pier.strokeColor = "black";
 
-    document.onkeydown = (event) => {
-      switch (event.key) {
-        case "ArrowLeft": {
-          this.boat.rudderLeft();
-          break;
-        }
-        case "ArrowRight": {
-          this.boat.rudderRight();
-          break;
-        }
-        case "ArrowUp": {
-          console.log("arrowup");
-          this.boat.speedUp();
-          break;
-        }
-        case "ArrowDown": {
-          this.boat.speedDown();
-          break;
-        }
-        default:
-          break;
-      }
-    };
-  }
+        this.intersectionGroup = new paper.Group();
 
-  drawBackground(ctx) {
-    ctx.fillStyle = "#ccc";
-    ctx.fillRect(0, 550, 800, 600);
-    ctx.beginPath();
-    ctx.moveTo(0, 550);
-    ctx.lineTo(800, 550);
-    ctx.stroke();
-  }
-
-  update(timedelta) {
-    //this.boat.position = new paper.Point(100, 0);
-    this.boat.update(timedelta);
-    if (this.pier.intersects(this.boat.hull)) {
-      this.pier.strokeColor = "red";
-    } else {
-      this.pier.strokeColor = "black";
+        document.onkeydown = (event) => {
+            switch (event.key) {
+                case "ArrowLeft":
+                    {
+                        this.boat.rudderLeft();
+                        break;
+                    }
+                case "ArrowRight":
+                    {
+                        this.boat.rudderRight();
+                        break;
+                    }
+                case "ArrowUp":
+                    {
+                        console.log("arrowup");
+                        this.boat.speedUp();
+                        break;
+                    }
+                case "ArrowDown":
+                    {
+                        this.boat.speedDown();
+                        break;
+                    }
+                default:
+                    break;
+            }
+        };
     }
-  }
 
-  hitcheck() {
-    /*
+    drawBackground(ctx) {
+        ctx.fillStyle = "#ccc";
+        ctx.fillRect(0, 550, 800, 600);
+        ctx.beginPath();
+        ctx.moveTo(0, 550);
+        ctx.lineTo(800, 550);
+        ctx.stroke();
+    }
+
+    update(timedelta) {
+        //this.boat.position = new paper.Point(100, 0);
+        this.boat.update(timedelta);
+
+        this.intersectionGroup.removeChildren();
+
+        let intersections = this.pier.getIntersections(this.boat.hull);
+        for (var i = 0; i < intersections.length; i++) {
+            var intersectionPath = new paper.Path.Circle({
+                center: intersections[i].point,
+                radius: 2.2,
+                fillColor: 'green',
+                parent: this.intersectionGroup
+            });
+        }
+    }
+
+    hitcheck() {
+        /*
     function scan_rect_for_collision(rect, s1, s2) {
       const step = 0.5;
       for (let x = rect.x; x <= rect.x + rect.width; x += step)
@@ -80,17 +94,17 @@ export default class Game {
       scan_rect_for_collision(i, this.boat.hull, this.pier);
     }
 */
-    /*
-      .getTransformedBounds()
-      .intersection(this.pier_rect);
-    if (intersection && !intersection.isEmpty()) {
-      let hitpoint = scan_rect_for_collision(
-        intersection,
-        this.boat,
-        this.pier
-      );
-    
+        /*
+          .getTransformedBounds()
+          .intersection(this.pier_rect);
+        if (intersection && !intersection.isEmpty()) {
+          let hitpoint = scan_rect_for_collision(
+            intersection,
+            this.boat,
+            this.pier
+          );
+
+        }
+        */
     }
-    */
-  }
 }

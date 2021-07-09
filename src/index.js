@@ -11,7 +11,9 @@ const HEIGHT = 600;
 //let canvas = document.getElementById("canvas");
 paper.setup("canvas");
 //paper.view.autoUpdate = false;
-paper.view.scale(6.0, [0.0, 0.0]);
+//paper.view.scale(0.0, [0.0, 0.0]);
+//paper.project.activeLayer.scale(4.0, [0.0, 0.0]);
+paper.project.activeLayer.transform(new paper.Matrix(10, 0, 0, -10, 0, 0));
 
 /*
 let ctx = canvas.getContext("2d");
@@ -38,16 +40,16 @@ let stage = new Konva.Stage({
 
 let game = new Game();
 
-async function gameloop(timestamp) {
-  let timedelta = timestamp - laststamp;
-  laststamp = timestamp;
+function gameloop(timestamp) {
+    let timedelta = timestamp - laststamp;
+    laststamp = timestamp;
 
-  game.update(timedelta);
-  paper.view.requestUpdate();
+    game.update(timedelta);
+    paper.view.requestUpdate();
 
-  await new Promise((r) => setTimeout(r, 250));
+    //await new Promise((r) => setTimeout(r, 250));
 
-  requestAnimationFrame(gameloop);
+    requestAnimationFrame(gameloop);
 }
 
 requestAnimationFrame(gameloop);
