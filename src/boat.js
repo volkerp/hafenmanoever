@@ -106,7 +106,7 @@ export default class Boat extends paper.Group {
   }
 
   update(timedelta) {
-    //console.log(this.hull.matrix);
+    // console.log(this.hull.matrix);
     //let dir = this.hull.globalToLocal(new paper.Point(0.0, 1.0));
     let dir = new paper.Point(0.0, 1.0).rotate(this.rotation);
 

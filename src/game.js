@@ -9,6 +9,9 @@ export default class Game {
 
     this.pier = new paper.Path.Rectangle(0, 85, 800, 600);
     this.pier.strokeColor = "black";
+    this.pier.sendToBack();
+
+    this.collisions = [];
 
     document.onkeydown = (event) => {
       switch (event.key) {
@@ -51,6 +54,18 @@ export default class Game {
       this.pier.strokeColor = "red";
     } else {
       this.pier.strokeColor = "black";
+    }
+
+
+    this.collisions.forEach((e) => e.remove());
+
+    var intersections = this.pier.getIntersections(this.boat.hull);
+    for (var i = 0; i < intersections.length; i++) {
+      this.collisions.push(new paper.Path.Circle({
+        center: intersections[i].point,
+        radius: 0.5,
+        fillColor: '#009dec'
+      }));
     }
   }
 
