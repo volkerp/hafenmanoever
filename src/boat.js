@@ -88,11 +88,13 @@ export default class Boat extends paper.Group {
   }
 
   rudderLeft() {
-    this.rotation -= 10;
+    this.rotation -= 10.0;
+    this.heading -= 10.0;
   }
 
   rudderRight() {
-    this.rotation += 10;
+    this.rotation += 10.0;
+    this.heading += 10.0;
   }
 
   speedUp() {
@@ -106,14 +108,11 @@ export default class Boat extends paper.Group {
   }
 
   update(timedelta) {
-    // console.log(this.hull.matrix);
-    //let dir = this.hull.globalToLocal(new paper.Point(0.0, 1.0));
-    let dir = new paper.Point(0.0, 1.0).rotate(this.rotation);
+    let p = new paper.Point(0.0, 1.0);
+    let dir = p.rotate(this.heading);
 
     let d = this.speed * (timedelta / 1000.0);
     dir = dir.multiply(d);
     this.position = this.position.add(dir);
-
-    //this.setPos(this.x() + dir.x, this.y() + dir.y);
   }
 }
