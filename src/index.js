@@ -39,15 +39,15 @@ let stage = new Konva.Stage({
 let game = new Game();
 
 function gameloop(timestamp) {
-  let timedelta = timestamp - laststamp;
-  laststamp = timestamp;
+    let timedelta = timestamp - laststamp;
+    laststamp = timestamp;
 
-  game.update(timedelta);
-  paper.view.requestUpdate();
+    game.update(timedelta);
+    paper.view.requestUpdate();
 
-  // await new Promise((r) => setTimeout(r, 250));
+    //await new Promise((r) => setTimeout(r, 250));
 
-  requestAnimationFrame(gameloop);
+    requestAnimationFrame(gameloop);
 }
 
 requestAnimationFrame(gameloop);

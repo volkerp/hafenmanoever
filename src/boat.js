@@ -1,26 +1,26 @@
 import paper from "paper";
 
 function degtorad(deg) {
-  return (Math.PI / 180.0) * deg;
+    return (Math.PI / 180.0) * deg;
 }
 
 export class Poller extends paper.Path.Circle {
-  constructor(posx, posy) {
-    super(posx, posy, 0.8);
-    this.fillColor = "red";
+    constructor(posx, posy) {
+        super(posx, posy, 0.8);
+        this.fillColor = "red";
 
-    this.on("mouseenter", (event) => {
-      this.radius = 1.0;
-      this.strokeColor = "black";
-      this.strokeWidth = 0.4;
-    });
+        this.on("mouseenter", (event) => {
+            this.radius = 1.0;
+            this.strokeColor = "black";
+            this.strokeWidth = 0.4;
+        });
 
-    this.on("mouseleave", (event) => {
-      this.radius = 0.8;
-      this.strokeColor = undefined;
-      this.strokeWidth = undefined;
-    });
-  }
+        this.on("mouseleave", (event) => {
+            this.radius = 0.8;
+            this.strokeColor = undefined;
+            this.strokeWidth = undefined;
+        });
+    }
 }
 
 export default class Boat extends paper.Group {
