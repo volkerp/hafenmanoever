@@ -24,7 +24,6 @@ export default class Game {
           break;
         }
         case "ArrowUp": {
-          console.log("arrowup");
           this.boat.speedUp();
           break;
         }
