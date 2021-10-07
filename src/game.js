@@ -8,35 +8,39 @@ export default class Game {
         this.boat = new Boat(50, 70);
         this.boat.scale(4.0);
 
-    this.pier = new paper.Path.Rectangle(0, 85, 800, 600);
-    this.pier.strokeColor = "black";
-    this.pier.sendToBack();
+        this.pier = new paper.Path.Rectangle(0, 85, 800, 600);
+        this.pier.strokeColor = "black";
+        this.pier.sendToBack();
 
-    this.collisions = [];
+        this.collisions = [];
 
-    document.onkeydown = (event) => {
-      switch (event.key) {
-        case "ArrowLeft": {
-          this.boat.rudderLeft();
-          break;
-        }
-        case "ArrowRight": {
-          this.boat.rudderRight();
-          break;
-        }
-        case "ArrowUp": {
-          this.boat.speedUp();
-          break;
-        }
-        case "ArrowDown": {
-          this.boat.speedDown();
-          break;
-        }
-        default:
-          break;
-      }
-    };
-  }
+        document.onkeydown = (event) => {
+            switch (event.key) {
+                case "ArrowLeft":
+                    {
+                        this.boat.rudderLeft();
+                        break;
+                    }
+                case "ArrowRight":
+                    {
+                        this.boat.rudderRight();
+                        break;
+                    }
+                case "ArrowUp":
+                    {
+                        this.boat.speedUp();
+                        break;
+                    }
+                case "ArrowDown":
+                    {
+                        this.boat.speedDown();
+                        break;
+                    }
+                default:
+                    break;
+            }
+        };
+    }
 
     drawBackground(ctx) {
         ctx.fillStyle = "#ccc";
@@ -47,19 +51,19 @@ export default class Game {
         ctx.stroke();
     }
 
-    update(timedelta) {
+    update(timedelta_s) {
         //this.boat.position = new paper.Point(100, 0);
-        this.boat.update(timedelta);
+        this.boat.update(timedelta_s);
 
         this.collisions.forEach((e) => e.remove());
 
         var intersections = this.pier.getIntersections(this.boat.hull);
         for (var i = 0; i < intersections.length; i++) {
-          this.collisions.push(new paper.Path.Circle({
-            center: intersections[i].point,
-            radius: 0.5,
-            fillColor: '#009dec'
-          }));
+            this.collisions.push(new paper.Path.Circle({
+                center: intersections[i].point,
+                radius: 0.5,
+                fillColor: '#009dec'
+            }));
         }
     }
 
