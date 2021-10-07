@@ -4,8 +4,11 @@ import Boat from "/src/boat.js";
 
 export default class Game {
     constructor() {
-        this.slider = new Slider([750, 420], 160, [-5, 5]);
-        this.slider.callback = (value) => { this.boat.throttle = value; }
+        this.throttle_slider = new Slider([660, 380], 160, [-5, 5]);
+        this.throttle_slider.callback = (value) => { this.boat.throttle = value; }
+
+        this.rudder_slider = new Slider([600, 560], 160, [-5, 5], true);
+        this.rudder_slider.callback = (value) => { this.boat.rudder = value; }
 
         this.boat = new Boat(50, 70);
         this.boat.scale(4.0);
@@ -21,23 +24,25 @@ export default class Game {
                 case "ArrowLeft":
                     {
                         this.boat.rudderLeft();
+                        this.rudder_slider.setValue(this.boat.rudder);
                         break;
                     }
                 case "ArrowRight":
                     {
                         this.boat.rudderRight();
+                        this.rudder_slider.setValue(this.boat.rudder);
                         break;
                     }
                 case "ArrowUp":
                     {
                         this.boat.speedUp();
-                        this.slider.setValue(this.boat.throttle);
+                        this.throttle_slider.setValue(this.boat.throttle);
                         break;
                     }
                 case "ArrowDown":
                     {
                         this.boat.speedDown();
-                        this.slider.setValue(this.boat.throttle);
+                        this.throttle_slider.setValue(this.boat.throttle);
                         break;
                     }
                 default:
@@ -60,7 +65,7 @@ export default class Game {
         let speed_value = document.getElementById("speed_value");
         let rudder_value = document.getElementById("rudder_value");
         let heading_value = document.getElementById("heading_value");
-        throttle_value.innerHTML = this.slider.value();
+        throttle_value.innerHTML = this.boat.throttle;
         speed_value.innerHTML = Number.parseFloat(this.boat.speed).toFixed(2);
         rudder_value.innerHTML = this.boat.rudder;
         heading_value.innerHTML = Number.parseFloat(this.boat.heading).toFixed(2);
