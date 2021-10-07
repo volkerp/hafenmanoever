@@ -1,31 +1,59 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <title>Parcel Sandbox</title>
     <meta charset="UTF-8" />
 
     <style>
-      #canvas {
-        border: 2px solid black;
-        padding: 0;
-      }
-      #container {
-        width: 800px;
-        height: 600px;
-        max-width: 800px;
-        max-height: 600px;
-        border: 1px solid black;
-      }
+        #canvas {
+            border: 2px solid black;
+            padding: 0;
+        }
+        
+        #container {
+            width: 800px;
+            height: 600px;
+            max-width: 800px;
+            max-height: 600px;
+            border: 1px solid black;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
-    <canvas id="canvas" width="800" height="600"></canvas>
+<body>
+    <row>
+        <canvas id="canvas" width="800" height="600"></canvas>
 
-    <!--
+        <!--
     <div id="container"></div>
     -->
 
+        <div id="panel">
+            <table>
+                <tr>
+                    <td class="textright">Throttle:</td>
+                    <td id="throttle_value">0</td>
+                </tr>
+                <tr>
+                    <td class="textright">Speed:</td>
+                    <td id="speed_value">0</td>
+                </tr>
+                <tr>
+                    <td class="textright">Rudder:</td>
+                    <td id="rudder_value">0</td>
+                </tr>
+                <tr>
+                    <td class="textright">Heading:</td>
+                    <td id="heading_value">0</td>
+                </tr>
+            </table>
+        </div>
+
+        <canvas id="controls"></canvas>
+    </row>
+
     <script src="src/index.js"></script>
-  </body>
+</body>
+
 </html>

@@ -112,7 +112,7 @@ export default class Boat extends paper.Group {
         let p = new paper.Point(0.0, 1.0);
         let dir = p.rotate(this.heading);
 
-        this.speed += (this.throttle * 0.3 - (this.speed * this.speed) * 0.15 * Math.sign(this.speed)) * d_t;
+        this.speed += (this.throttle * 0.4 - (this.speed * this.speed) * 0.2 * Math.sign(this.speed)) * d_t;
 
         let d_phi = this.rudder * this.speed * 0.25 * d_t;
 

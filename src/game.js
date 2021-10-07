@@ -51,9 +51,22 @@ export default class Game {
         ctx.stroke();
     }
 
+    updatePanelValues() {
+        let throttle_value = document.getElementById("throttle_value");
+        let speed_value = document.getElementById("speed_value");
+        let rudder_value = document.getElementById("rudder_value");
+        let heading_value = document.getElementById("heading_value");
+        throttle_value.innerHTML = this.boat.throttle;
+        speed_value.innerHTML = Number.parseFloat(this.boat.speed).toFixed(2);
+        rudder_value.innerHTML = this.boat.rudder;
+        heading_value.innerHTML = Number.parseFloat(this.boat.heading).toFixed(2);
+    }
+
+
     update(timedelta_s) {
         //this.boat.position = new paper.Point(100, 0);
         this.boat.update(timedelta_s);
+        this.updatePanelValues();
 
         this.collisions.forEach((e) => e.remove());
 
