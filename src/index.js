@@ -1,7 +1,7 @@
 import "./styles.css";
 
 //import Konva from "konva";
-import paper from "paper";
+import paper, { Point, Size } from "paper";
 
 import Game from "./game.js";
 
@@ -13,30 +13,16 @@ paper.setup("canvas");
 //paper.view.autoUpdate = false;
 // paper.view.scale(5.0, [0.0, 0.0]);
 
-/*
-let ctx = canvas.getContext("2d");
-*/
+
+
+
+
+
 let laststamp_ms = 0;
 
-/*
-let stage = new createjs.Stage("canvas");
-stage.enableMouseOver(20); // 20 updates per second
-let matrix = new createjs.Matrix2D();
-matrix.scale(6.0, 6.0);
-stage.transformMatrix = matrix;
-*/
-
-/*
-let stage = new Konva.Stage({
-  container: "container",
-  width: WIDTH,
-  height: HEIGHT,
-  scaleX: 6.0,
-  scaleY: 6.0
-});
-*/
 
 let game = new Game();
+
 
 function gameloop(timestamp_ms) {
     let timedelta = timestamp_ms - laststamp_ms;
