@@ -4,18 +4,25 @@ import Boat from "/src/boat.js";
 
 export default class Game {
     constructor() {
-        this.throttle_slider = new Slider([660, 380], 160, [-5, 5]);
+        var background = new paper.Path.Rectangle({
+            point: [0,0], size: [paper.view.size.width, paper.view.size.height], fillColor: "#AFD7EC"
+        });
+
+        this.throttle_slider = new Slider([686, 420], 120, [-5, 5]);
         this.throttle_slider.callback = (value) => { this.boat.throttle = value; }
 
-        this.rudder_slider = new Slider([600, 560], 160, [-5, 5], true);
+        this.rudder_slider = new Slider([640, 560], 120, [-5, 5], true);
         this.rudder_slider.callback = (value) => { this.boat.rudder = value; }
 
-        this.boat = new Boat(50, 70);
-        this.boat.scale(4.0);
-
-        this.pier = new paper.Path.Rectangle(0, 85, 800, 600);
+        this.pier = new paper.Path.Rectangle(0, 340, paper.view.size.width, 600);
         this.pier.strokeColor = "black";
-        this.pier.sendToBack();
+        this.pier.fillColor = "grey";
+        this.pier.insertAbove(background);
+        console.log(background, this.pier);
+
+        this.boat = new Boat(100, 170);
+        this.boat.scale(5.0);
+        this.boat.insertAbove(this.pier);
 
         this.collisions = [];
 
@@ -78,54 +85,26 @@ export default class Game {
         this.updatePanelValues();
 
         this.collisions.forEach((e) => e.remove());
+        this.collisions = [];
 
-        var intersections = this.pier.getIntersections(this.boat.hull);
-        for (var i = 0; i < intersections.length; i++) {
-            this.collisions.push(new paper.Path.Circle({
-                center: intersections[i].point,
-                radius: 0.5,
-                fillColor: '#009dec'
-            }));
-        }
+        this.hitcheck();
     }
 
     hitcheck() {
-        /*
-    function scan_rect_for_collision(rect, s1, s2) {
-      const step = 0.5;
-      for (let x = rect.x; x <= rect.x + rect.width; x += step)
-        for (let y = rect.y; y <= rect.y + rect.height; y += step) {
-          //let p = inv_matrix.transformPoint(x, y);
-          let p1 = s1.getTransform().invert().point({ x: x, y: y });
-          //console.log(p1);
-          if (s1.intersects(p1)) console.log("intersect", x, y);
+        this.collisions.forEach((e) => e.remove());
+        this.collisions = [];
+
+        var intersections = this.pier.getIntersections(this.boat.hull);
+        for (var i = 0; i < intersections.length; i++) {
+            this.collisions.push(new paper.Path.Star({
+                center: intersections[i].point,
+                points: 5,
+                radius1: 3.0,
+                radius2: 7.0,
+                fillColor: '#FDE600',
+                strokeColor: "black"
+            }));
         }
-    }
-
-    let rb = Rect.fromKonva(
-      this.boat.getClientRect({ relativeTo: this.stage })
-    );
-    console.log(this.boat.getTransform());
-    let rp = Rect.fromKonva(
-      this.pier.getClientRect({ relativeTo: this.stage })
-    );
-
-    let i = rb.intersect(rp);
-    if (!i.isEmpty()) {
-      scan_rect_for_collision(i, this.boat.hull, this.pier);
-    }
-*/
-        /*
-          .getTransformedBounds()
-          .intersection(this.pier_rect);
-        if (intersection && !intersection.isEmpty()) {
-          let hitpoint = scan_rect_for_collision(
-            intersection,
-            this.boat,
-            this.pier
-          );
-
-        }
-        */
+        this.collisions.forEach((e) => e.insertAbove(this.boat));
     }
 }

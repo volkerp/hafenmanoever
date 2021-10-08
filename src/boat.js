@@ -26,6 +26,8 @@ export class Poller extends paper.Path.Circle {
 export default class Boat extends paper.Group {
     constructor(posx, posy) {
         super();
+        this.mass = 1800.0;
+        this.power = 1500.0;
         this.heading = 0.0; // positive y-axis (down on screen)
         this.rudder = 0;
         this.speed = 0;
@@ -34,7 +36,7 @@ export default class Boat extends paper.Group {
 
         this.hull = new paper.Path();
         this.hull.addSegments([
-            [0.0, 11.0],
+            [0.0, 12.0],
             [1.3, 8.0],
             [1.8, 6.0],
             [1.9, 4.0],
@@ -43,10 +45,11 @@ export default class Boat extends paper.Group {
             [-1.9, 4.0],
             [-1.8, 6.0],
             [-1.3, 8.0],
-            [0.0, 11.0]
+            [0.0, 12.0]
         ]);
         this.hull.strokeColor = "#444";
-        this.hull.strokeWidth = 1.0;
+        this.hull.strokeWidth = 1.6;
+        this.hull.fillColor = "#E8E4DA";
 
         this.addChild(this.hull);
 
@@ -78,7 +81,7 @@ export default class Boat extends paper.Group {
         [this.x, this.y] = [posx, posy];
         */
 
-        this.klampebug = new Poller(0, 11.0);
+        this.klampebug = new Poller(0, 11.5);
         this.addChild(this.klampebug);
         this.klampeheckbb = new Poller(1.3, 0.0);
         this.addChild(this.klampeheckbb);
@@ -112,9 +115,14 @@ export default class Boat extends paper.Group {
         let p = new paper.Point(0.0, 1.0);
         let dir = p.rotate(this.heading);
 
-        this.speed += (this.throttle * 0.4 - (this.speed * this.speed) * 0.2 * Math.sign(this.speed)) * d_t;
+        let accel = this.throttle * this.power / this.mass;
+        let decel = Math.max(0.2, (this.speed * this.speed)) * 0.25 * Math.sign(this.speed);
+    
 
-        let d_phi = this.rudder * this.speed * 0.25 * d_t;
+        this.speed += (accel - decel) * d_t;
+        if (Math.abs(this.speed) < 0.01) this.speed = 0.0;  // stop decel from oscilating around 0.0
+
+        let d_phi = this.rudder * this.speed * 0.35 * d_t;
 
         this.rotation += d_phi;
         this.heading += d_phi;
