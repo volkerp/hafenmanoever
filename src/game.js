@@ -8,11 +8,17 @@ export default class Game {
             point: [0,0], size: [paper.view.size.width, paper.view.size.height], fillColor: "#AFD7EC"
         });
 
+
+
         this.throttle_slider = new Slider([686, 420], 120, [-5, 5]);
         this.throttle_slider.callback = (value) => { this.boat.throttle = value; }
 
         this.rudder_slider = new Slider([640, 560], 120, [-5, 5], true);
         this.rudder_slider.callback = (value) => { this.boat.rudder = value; }
+
+        this.windspd_slider = new Slider([390, 420], 80, [0, 7]);
+        this.windspd_slider.setValue(0);
+        this.winddir_slider = new Slider([366, 510], 80, [-180, 180.0], true);
 
         this.pier = new paper.Path.Rectangle(0, 340, paper.view.size.width, 600);
         this.pier.strokeColor = "black";
@@ -72,10 +78,14 @@ export default class Game {
         let speed_value = document.getElementById("speed_value");
         let rudder_value = document.getElementById("rudder_value");
         let heading_value = document.getElementById("heading_value");
+        let omega_value = document.getElementById("omega_value");
+        let windspd_value = document.getElementById("windspd_value");
         throttle_value.innerHTML = this.boat.throttle;
         speed_value.innerHTML = Number.parseFloat(this.boat.speed).toFixed(2);
         rudder_value.innerHTML = this.boat.rudder;
         heading_value.innerHTML = Number.parseFloat(this.boat.heading).toFixed(2);
+        omega_value.innerHTML = Number.parseFloat(this.boat.omega).toFixed(2);
+        windspd_value.innerHTML = this.windspd_slider.value();
     }
 
 

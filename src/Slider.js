@@ -66,11 +66,11 @@ export default class Slider extends paper.Group {
     value() {
         let v;
         if (this.is_horiz) {
-            v = Math.floor(this.handle.position.x / this.length * (this.max - this.min));
+            v = Math.floor((this.handle.position.x / this.length) * (this.max - this.min));
             return v + this.min;
         } else {
-            v = Math.floor(this.handle.position.y / this.length * (this.max - this.min));
-            return -(v + this.min);
+            v = Math.floor((1.0 - this.handle.position.y / this.length) * (this.max - this.min));
+            return v + this.min;
         }
     }
 

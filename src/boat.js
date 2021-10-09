@@ -30,6 +30,7 @@ export default class Boat extends paper.Group {
         this.power = 1500.0;
         this.heading = 0.0; // positive y-axis (down on screen)
         this.rudder = 0;
+        this.omega = 0.0; // angular velocity [1/s]
         this.speed = 0;
         this.throttle = 0;
         this.applyMatrix = true;
@@ -120,12 +121,16 @@ export default class Boat extends paper.Group {
     
 
         this.speed += (accel - decel) * d_t;
-        if (Math.abs(this.speed) < 0.01) this.speed = 0.0;  // stop decel from oscilating around 0.0
+        if (Math.abs(this.speed) < 0.01) this.speed = 0.0;  // stop speed from oscilating around 0.0
 
-        let d_phi = this.rudder * this.speed * 0.35 * d_t;
+        // alpha: angular accelaration [rad/s^2]
+        let alpha = this.rudder * this.speed * 0.35 - Math.max(5.0, (this.omega * this.omega)) * 0.075 *  Math.sign(this.omega);
+        this.omega += alpha * d_t;
+        if (Math.abs(this.omega) < 0.01) this.omega = 0.0;  // stop omega from oscilating around 0.0
 
-        this.rotation += d_phi;
-        this.heading += d_phi;
+        this.heading += this.omega * d_t;
+        this.rotation += this.omega * d_t;
+        
         let d = this.speed * d_t;
         dir = dir.multiply(d);
         this.position = this.position.add(dir);
