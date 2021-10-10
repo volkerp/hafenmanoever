@@ -76,9 +76,9 @@ export default class Slider extends paper.Group {
 
     setValue(val) {
         if (this.is_horiz) {
-            this.handle.position.x = (val - this.min) * this.length / 10.0;
+            this.handle.position.x = (val - this.min) * this.length / (this.max - this.min);
         } else {
-            this.handle.position.y = -(val + this.min) * this.length / 10.0;
+            this.handle.position.y = this.length - ((val - this.min) / (this.max - this.min) * this.length);
         }
     }
 }
