@@ -4,6 +4,13 @@ function degtorad(deg) {
     return (Math.PI / 180.0) * deg;
 }
 
+/**
+ * Signed square
+ */
+function signsq(x) {
+    return x * x * Math.sign(x);
+}
+
 export class Poller extends paper.Path.Circle {
     constructor(posx, posy) {
         super(posx, posy, 0.8);
@@ -112,6 +119,14 @@ export default class Boat extends paper.Group {
         if (this.throttle < -5) this.throttle = -5;
     }
 
+    heading_deg() {
+        let h = 180.0 + this.heading;
+        if (h < 0.0) h += 360.0;
+        else if (h >= 360.0) h -= 360.0;
+
+        return h;
+    }
+
     update(d_t) {
         let p = new paper.Point(0.0, 1.0);
         let dir = p.rotate(this.heading);
@@ -123,12 +138,24 @@ export default class Boat extends paper.Group {
         this.speed += (accel - decel) * d_t;
         if (Math.abs(this.speed) < 0.01) this.speed = 0.0;  // stop speed from oscilating around 0.0
 
-        // alpha: angular accelaration [rad/s^2]
-        let alpha = this.rudder * this.speed * 0.35 - Math.max(5.0, (this.omega * this.omega)) * 0.075 *  Math.sign(this.omega);
-        this.omega += alpha * d_t;
-        if (Math.abs(this.omega) < 0.01) this.omega = 0.0;  // stop omega from oscilating around 0.0
+        // angular accelaration [rad/s^2]
+        //
+        let rudder_accel = this.rudder * this.speed * this.speed * 0.035;
+
+        let wind_accel = Math.sin(this.heading_deg() * (Math.PI / 180.0)) * window.wind.spd * window.wind.spd * 0.008;
+
+        let ang_decel = Math.max(1.4, this.omega**2) * 0.15 * Math.sign(this.omega);
+
+        //console.log(rudder_accel, wind_accel, ang_decel, this.omega);
+
+
+        this.omega += (rudder_accel + wind_accel - ang_decel) * d_t;
+
+        if (Math.abs(this.omega) < 0.00001) this.omega = 0.0;  // stop omega from oscilating around 0.0
 
         this.heading += this.omega * d_t;
+        if (this.heading < 0.0) this.heading += 360.0;
+        else if (this.heading > 360.0) this.heading -= 360.0;
         this.rotation += this.omega * d_t;
         
         let d = this.speed * d_t;
