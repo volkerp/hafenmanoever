@@ -8,13 +8,11 @@ import Game from "./game.js";
 const WIDTH = 800;
 const HEIGHT = 600;
 
+paper.install(window);
 //let canvas = document.getElementById("canvas");
 paper.setup("canvas");
 //paper.view.autoUpdate = false;
 // paper.view.scale(5.0, [0.0, 0.0]);
-
-
-
 
 
 

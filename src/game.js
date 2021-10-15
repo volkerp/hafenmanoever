@@ -4,11 +4,13 @@ import Boat from "/src/boat.js";
 
 export default class Game {
     constructor() {
-        var background = new paper.Path.Rectangle({
-            point: [0,0], size: [paper.view.size.width, paper.view.size.height], fillColor: "#AFD7EC"
+        var background = new Path.Rectangle({
+            point: [0, 0],
+            size: [view.size.width, view.size.height],
+            fillColor: "#AFD7EC"
         });
 
-        window.wind = {'spd': 0.0, 'dir': 0.0 };
+        window.wind = { 'spd': 0.0, 'dir': 0.0 };
 
         this.throttle_slider = new Slider([686, 420], 120, [-5, 5]);
         this.throttle_slider.callback = (value) => { this.boat.throttle = value; }
@@ -22,7 +24,7 @@ export default class Game {
         this.winddir_slider = new Slider([366, 510], 80, [-180, 180.0], true);
         this.winddir_slider.callback = (value) => { window.wind.dir = value; }
 
-        this.pier = new paper.Path.Rectangle(0, 340, paper.view.size.width, 600);
+        this.pier = new Path.Rectangle(0, 340, paper.view.size.width, 600);
         this.pier.strokeColor = "black";
         this.pier.fillColor = "grey";
         this.pier.insertAbove(background);
@@ -86,7 +88,7 @@ export default class Game {
         throttle_value.innerHTML = this.boat.throttle;
         speed_value.innerHTML = Number.parseFloat(this.boat.speed).toFixed(2);
         rudder_value.innerHTML = this.boat.rudder;
-        heading_value.innerHTML = Number.parseFloat(this.boat.heading_deg() ).toFixed(2);
+        heading_value.innerHTML = Number.parseFloat(this.boat.heading_deg()).toFixed(2);
         omega_value.innerHTML = Number.parseFloat(this.boat.omega).toFixed(2);
         windspd_value.innerHTML = window.wind.spd;
         winddir_value.innerHTML = window.wind.dir + "°";
